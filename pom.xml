@@ -12,6 +12,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <sonar.organization>rakshit5467</sonar.organization>
         <!-- Sonar token can be passed via command line; no need to put here -->
     </properties>
 
