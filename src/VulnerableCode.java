@@ -1,42 +1,51 @@
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class VulnerableCode {
 
-    // Hardcoded password vulnerability
+    // Security: Hardcoded credentials (should never be in code)
     private static final String PASSWORD = "P@ssw0rd123";
+    private static final String API_KEY = "12345-ABCDE"; // Security issue: hardcoded API key
 
     public static void main(String[] args) {
         VulnerableCode vc = new VulnerableCode();
 
-        // Hardcoded password usage
+        // Reliability: Redundant authentication check
         if (vc.authenticate("user", PASSWORD)) {
             System.out.println("Authentication successful!");
         } else {
             System.out.println("Authentication failed.");
         }
 
-        // Weak hashing algorithm usage (MD5)
+        // Security: Weak hashing algorithm (MD5)
         String hashedPassword = vc.hashPassword("myPassword");
-        System.out.println("Hashed password: " + hashedPassword);
+        System.out.println("Hashed password (MD5): " + hashedPassword);
 
-        // Detailed exception information leakage
+        // Security & Maintainability: Information leak via exception
         try {
             vc.doRiskyOperation();
         } catch (Exception e) {
-            // Printing stack trace could leak sensitive info
+            // Reliability: Stack trace leak exposes internal structure
             e.printStackTrace();
         }
+
+        // Security: Insecure encoding of sensitive data
+        String encodedKey = Base64.getEncoder().encodeToString(API_KEY.getBytes());
+        System.out.println("Encoded API Key: " + encodedKey);
+
+        // Maintainability: Unused method
+        vc.unusedMethod();
     }
 
+    // Security: Method uses hardcoded password
     public boolean authenticate(String username, String password) {
-        // Simulate authentication logic. Using hardcoded password is insecure.
         return PASSWORD.equals(password);
     }
 
+    // Security: Method uses insecure hash algorithm
     public String hashPassword(String password) {
         try {
-            // Using insecure MD5 hash algorithm
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] hashBytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
@@ -45,13 +54,18 @@ public class VulnerableCode {
             }
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            // Exception handling revealing stack trace (info leak)
+            // Security: Exception handling reveals stack trace and sensitive details
             throw new RuntimeException(e);
         }
     }
 
+    // Security: Exception exposes implementation and leaks info
     public void doRiskyOperation() throws Exception {
-        // Example method that throws exception with detailed info
         throw new Exception("Detailed error message with sensitive data.");
+    }
+
+    // Maintainability: Dead code - unused method
+    public void unusedMethod() {
+        // Unused
     }
 }
